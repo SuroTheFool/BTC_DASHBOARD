@@ -22,6 +22,7 @@ class PriceGraph(ttk.Frame):
         self.prices.append(price)
         if len(self.prices) > self.max_points:
             self.prices = self.prices[-self.max_points:]
+        self._redraw()
     def _redraw(self):
         self.canvas.delete("all")
         if len(self.prices) < 2:
@@ -36,7 +37,19 @@ class PriceGraph(ttk.Frame):
         # Horizontal spacing between 2 points
         x_step = self.width / (n - 1)
 
+        def price_to_y(p):
+            ratio = (p - min_p) / (max_p - min_p)
+            return self.height - ratio * self.height
+        for i in range(1,n):
+            p0 = self.prices[i-1]
+            p1 = self.prices[i]
+            x0 = (i - 1) * x_step
+            x1 = i * x_step
+            y0 = price_to_y(p0)
+            y1 = price_to_y(p1)
 
+            color = "green" if p1 >= p0 else "red"
+            self.canvas.create_line(x0,y0,x1,y1, fill=color, width=2)
 class CryptoTicker:
     """Reusable ticker component for any cryptocurrency."""
 
@@ -78,6 +91,10 @@ class CryptoTicker:
         self.change_label = ttk.Label(self.frame, text="--",
                                       font=("Arial", 12))
         self.change_label.pack()
+        # Graph with green and red line depending of the price evolution
+        self.price_graph = PriceGraph(self.frame,width=320,height=120,max_points=120)
+        self.price_graph.pack(pady=10)
+        
 
     def start(self):
         """Start WebSocket connection."""
@@ -130,6 +147,7 @@ class CryptoTicker:
             text=f"{sign}{change:,.2f} ({sign}{percent:.2f}%)",
             foreground=color
         )
+        self.price_graph.add_price(price)
 
     def pack(self, **kwargs):
         """Allow easy placement of ticker."""
@@ -138,7 +156,6 @@ class CryptoTicker:
     def pack_forget(self):
         """Hide the ticker."""
         self.frame.pack_forget()
-
 
 class SecretTickerApp:
     def __init__(self, root):
@@ -198,5 +215,5 @@ class SecretTickerApp:
 if __name__ == '__main__':
     root = tk.Tk()
     app = SecretTickerApp(root)
-    root.mainloop()
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
+    root.mainloop()
