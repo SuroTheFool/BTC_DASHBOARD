@@ -43,7 +43,6 @@ class CryptoTicker:
         self.price_label = tk.Label(self.frame, text="--,---",
                                     font=("Arial", 40, "bold"))
         self.price_label.pack(pady=10)
-
         # Change
         self.change_label = ttk.Label(self.frame, text="--",
                                       font=("Arial", 12))

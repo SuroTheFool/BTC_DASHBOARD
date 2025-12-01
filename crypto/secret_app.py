@@ -14,7 +14,14 @@ class SecretTickerApp:
         self.secret = ["up", "down", "left", "right"]
         self.current_sequence_index = 0
         root.bind('<Key>', self.discover_secret)
-
+        self.hidden_visible = False
+        self.initial_text = ttk.Label(
+            root, 
+            text=self.change_hint(),
+            foreground="blue",
+            style="TLabel",
+        )
+        self.initial_text.pack(pady = 10)
         self.ticker_frame = ttk.Frame(root, padding=20)
         self.ticker_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -27,7 +34,6 @@ class SecretTickerApp:
         self.sol_ticker = CryptoTicker(
             self.ticker_frame, "solusdt", "SOL/USDT", "img/SOL.png")
 
-        self.hidden_visible = False
 
     def on_closing(self):
         """Clean up when closing."""
@@ -42,7 +48,9 @@ class SecretTickerApp:
         if key == self.secret[self.current_sequence_index]:
             self.current_sequence_index += 1
             if self.current_sequence_index == len(self.secret):
+                self.hidden_visible = True
                 self.current_sequence_index = 0
+                self.initial_text.configure(text=self.change_hint())
                 self.btc_ticker.pack(side=tk.LEFT, padx=10,
                                      fill=tk.BOTH, expand=True)
                 self.btc_ticker.start()
@@ -52,6 +60,11 @@ class SecretTickerApp:
                 self.sol_ticker.pack(side=tk.LEFT, padx=10,
                                      fill=tk.BOTH, expand=True)
                 self.sol_ticker.start()
-                self.hidden_visible = True
         else:
             self.current_sequence_index = 0
+        
+    def change_hint(self):
+        if self.hidden_visible == True:
+            return "HOW DID YOU DISCOVERED MY SECRET ?"
+        else:
+            return "To find The secret..."
