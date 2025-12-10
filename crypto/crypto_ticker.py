@@ -20,8 +20,8 @@ class CryptoTicker:
         self.image_path = image_path
 
         # Create UI
-        self.frame = ttk.Frame(parent, relief="solid",
-                               borderwidth=1, padding=20)
+        self.frame = tk.Frame(parent, relief="solid",
+                               borderwidth=1, padx=20, pady=20,bg="black")
         # Show image of the currency
         try:
             self.currency_img_pil = Image.open(self.image_path)
@@ -29,7 +29,7 @@ class CryptoTicker:
             self.tk_image_reference = ImageTk.PhotoImage(self.currency_img_pil)
 
             self.image_label = tk.Label(
-                self.frame, image=self.tk_image_reference)
+                self.frame, image=self.tk_image_reference,bg = "black")
             self.image_label.pack(pady=5)
 
         except FileNotFoundError as e:
@@ -39,16 +39,16 @@ class CryptoTicker:
             ttk.Label(self.frame, text="[Image N/A]").pack(pady=5)
 
         # Title
-        ttk.Label(self.frame, text=display_name,
-                  font=("Arial", 16, "bold")).pack()
+        tk.Label(self.frame, text=display_name,
+                  font=("Arial", 16, "bold"),fg="white", bg = "black").pack()
 
         # Price
         self.price_label = tk.Label(self.frame, text="--,---",
-                                    font=("Arial", 40, "bold"))
+                                    font=("Arial", 40, "bold"),bg="black")
         self.price_label.pack(pady=10)
         # Change
-        self.change_label = ttk.Label(self.frame, text="--",
-                                      font=("Arial", 12))
+        self.change_label = tk.Label(self.frame, text="--",
+                                      font=("Arial", 12),bg ="black")
         self.change_label.pack()
         # Graph with green and red line depending of the price evolution
         self.price_graph = PriceGraph(

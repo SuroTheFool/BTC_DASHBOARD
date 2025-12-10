@@ -9,21 +9,25 @@ class SecretTickerApp:
         self.root = root
         self.root.title("Secret Crypto Dashboard")
         self.root.geometry("1500x800")
-        control_frame = ttk.Frame(root, padding=10)
+        root.configure(bg="black")
+        control_frame = tk.Frame(root, bg='black',padx=10, pady=10)
         control_frame.pack(fill=tk.X)
         # Can't tell you ;(
         self.secret = ["up", "down", "left", "right"]
         self.current_sequence_index = 0
         root.bind('<Key>', self.discover_secret)
         self.hidden_visible = False
-        self.initial_text = ttk.Label(
+        self.initial_text = tk.Label(
             root,
             text=self.change_hint(),
-            foreground="blue",
-            style="TLabel",
+            fg="white",
+            bg="black",
+            font=("Calibri",14,'bold'),
+            wraplength=1000,
+            justify="left",
         )
         self.initial_text.pack(pady=10)
-        self.ticker_frame = ttk.Frame(root, padding=20)
+        self.ticker_frame = tk.Frame(root, bg="black", padx=20, pady=20)
         self.ticker_frame.pack(fill=tk.BOTH, expand=True)
 
         self.btc_ticker = CryptoTicker(
@@ -67,4 +71,8 @@ class SecretTickerApp:
         if self.hidden_visible == True:
             return "HOW DID YOU DISCOVERED MY SECRET ?"
         else:
-            return "To find The secret..."
+            return """\n
+            To start, look towards the sky, where birds fly and clouds pass.\n
+            Next, set your eyes on the ground, where roots grow and buried treasures hide\n
+            Turn your head towards the place where the sun sets in the evening, where your less used hand is often found.\n
+            Finally, look to the other side, where the sun rises in the morning, where your strongest hand is."""
