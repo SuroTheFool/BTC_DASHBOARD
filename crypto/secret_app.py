@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from .crypto_ticker import CryptoTicker
 
+
 class SecretTickerApp:
     def __init__(self, root):
         # Base of my app
@@ -16,12 +17,12 @@ class SecretTickerApp:
         root.bind('<Key>', self.discover_secret)
         self.hidden_visible = False
         self.initial_text = ttk.Label(
-            root, 
+            root,
             text=self.change_hint(),
             foreground="blue",
             style="TLabel",
         )
-        self.initial_text.pack(pady = 10)
+        self.initial_text.pack(pady=10)
         self.ticker_frame = ttk.Frame(root, padding=20)
         self.ticker_frame.pack(fill=tk.BOTH, expand=True)
 
@@ -33,7 +34,6 @@ class SecretTickerApp:
 
         self.sol_ticker = CryptoTicker(
             self.ticker_frame, "solusdt", "SOL/USDT", "img/SOL.png")
-
 
     def on_closing(self):
         """Clean up when closing."""
@@ -62,7 +62,7 @@ class SecretTickerApp:
                 self.sol_ticker.start()
         else:
             self.current_sequence_index = 0
-        
+
     def change_hint(self):
         if self.hidden_visible == True:
             return "HOW DID YOU DISCOVERED MY SECRET ?"

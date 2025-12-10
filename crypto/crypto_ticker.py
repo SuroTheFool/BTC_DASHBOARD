@@ -6,6 +6,7 @@ import json
 import threading
 from PIL import Image, ImageTk
 from .price_graph import PriceGraph
+from .error_handling import ConnectionsError,DataError,ImageLoadError
 
 class CryptoTicker:
     """Reusable ticker component for any cryptocurrency."""
@@ -31,8 +32,10 @@ class CryptoTicker:
                 self.frame, image=self.tk_image_reference)
             self.image_label.pack(pady=5)
 
-        except FileNotFoundError:
-            print(f"Image file not found at: {self.image_path}")
+        except FileNotFoundError as e:
+            raise ImageLoadError(f"Image file not found at: {self.display_name}", 
+            path=self) from e
+            
             ttk.Label(self.frame, text="[Image N/A]").pack(pady=5)
 
         # Title
@@ -48,9 +51,9 @@ class CryptoTicker:
                                       font=("Arial", 12))
         self.change_label.pack()
         # Graph with green and red line depending of the price evolution
-        self.price_graph = PriceGraph(self.frame,width=400,height=250,max_points=120)
+        self.price_graph = PriceGraph(
+            self.frame, width=400, height=250, max_points=120)
         self.price_graph.pack(pady=10)
-        
 
     def start(self):
         """Start WebSocket connection."""
@@ -63,7 +66,7 @@ class CryptoTicker:
         self.ws = websocket.WebSocketApp(
             ws_url,
             on_message=self.on_message,
-            on_error=lambda ws, err: print(f"{self.symbol} error: {err}"),
+            on_error=self._on_ws_error,
             on_close=lambda ws, s, m: print(f"{self.symbol} closed"),
             on_open=lambda ws: print(f"{self.symbol} connected")
         )
@@ -89,7 +92,10 @@ class CryptoTicker:
 
         # Schedule GUI update on main thread
         self.parent.after(0, self.update_display, price, change, percent)
-
+    def _on_ws_error(self,ws,error):
+        raise ConnectionsError(
+            f"WebSocket error: {error}",symbol=self.symbol
+        )
     def update_display(self, price, change, percent):
         """Update the ticker display."""
         if not self.is_active:
