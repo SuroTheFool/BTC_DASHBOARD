@@ -90,6 +90,7 @@ class SecretTickerApp:
             return "HOW DID YOU DISCOVERED MY SECRET ?"
         else:
             return """\n
+            (Konami code answer at the top of my README.MD)\n
             To start, look towards the sky, where birds fly and clouds pass.\n
             Next, set your eyes on the ground, where roots grow and buried treasures hide\n
             Turn your head towards the place where the sun sets in the evening, where your less used hand is often found.\n
