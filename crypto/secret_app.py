@@ -10,11 +10,12 @@ class SecretTickerApp:
         self.root.title("Secret Crypto Dashboard")
         self.root.geometry("1500x800")
         root.configure(bg="black")
-        control_frame = tk.Frame(root, bg='black',padx=10, pady=10)
+        control_frame = tk.Frame(root, bg='black', padx=10, pady=10)
         control_frame.pack(fill=tk.X)
         # Can't tell you ;(
         self.secret = ["up", "down", "left", "right"]
-        self.pause = ["s","t","o","p"]
+        self.pause_code = ["s", "t", "o", "p"]
+        self.pause_index = 0
         self.current_sequence_index = 0
         root.bind('<Key>', self.discover_secret)
         self.hidden_visible = False
@@ -23,7 +24,7 @@ class SecretTickerApp:
             text=self.change_hint(),
             fg="white",
             bg="black",
-            font=("Calibri",14,'bold'),
+            font=("Calibri", 14, 'bold'),
             wraplength=1000,
             justify="left",
         )
@@ -46,10 +47,25 @@ class SecretTickerApp:
         self.eth_ticker.stop()
         self.sol_ticker.stop()
         self.root.destroy()
-    def on_pause(self,event):
-        pass
+
+    def on_pause(self, event):
+        key = event.keysym.lower()
+        if key == self.pause_code[self.pause_index]:
+            self.pause_index += 1
+            if self.pause_index == len(self.pause_code):
+                self.pause_index = 0
+                new_state = not self.btc_ticker.is_paused
+
+                self.btc_ticker.is_paused = new_state
+                self.eth_ticker.is_paused = new_state
+                self.sol_ticker.is_paused = new_state
+                print(f'Game is {'paused' if new_state else 'resumed'}')
+        else:
+            self.pause_index = 0
+
     def discover_secret(self, event):
         """Show my tickers with Konami Code."""
+        self.on_pause(event)
         key = event.keysym.lower()
         if key == self.secret[self.current_sequence_index]:
             self.current_sequence_index += 1

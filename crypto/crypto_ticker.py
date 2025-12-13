@@ -60,10 +60,6 @@ class CryptoTicker:
         """Start WebSocket connection."""
         if self.is_active:
             return
-        # My new pause feature
-        if self.is_paused:
-            return
-
         self.is_active = True
         ws_url = f"wss://stream.binance.com:9443/ws/{self.symbol}@ticker"
 
@@ -86,10 +82,11 @@ class CryptoTicker:
 
     def on_message(self, ws, message):
         """Handle price updates."""
-        if self.is_active:
+        if not self.is_active:
             return
         if self.is_paused:
             return
+        
 
         data = json.loads(message)
         price = float(data['c'])
