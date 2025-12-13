@@ -14,6 +14,7 @@ class SecretTickerApp:
         control_frame.pack(fill=tk.X)
         # Can't tell you ;(
         self.secret = ["up", "down", "left", "right"]
+        self.pause = ["s","t","o","p"]
         self.current_sequence_index = 0
         root.bind('<Key>', self.discover_secret)
         self.hidden_visible = False
@@ -45,7 +46,8 @@ class SecretTickerApp:
         self.eth_ticker.stop()
         self.sol_ticker.stop()
         self.root.destroy()
-
+    def on_pause(self,event):
+        pass
     def discover_secret(self, event):
         """Show my tickers with Konami Code."""
         key = event.keysym.lower()
