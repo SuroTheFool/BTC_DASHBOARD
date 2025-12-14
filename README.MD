@@ -77,4 +77,4 @@ initial.py
 ```
 ## 📸 Final DESIGN
 
-![alt text](img\image.png)
+![Final design](/img/image.png)
