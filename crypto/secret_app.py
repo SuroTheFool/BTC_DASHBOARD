@@ -14,7 +14,7 @@ class SecretTickerApp:
         control_frame.pack(fill=tk.X)
         # Can't tell you ;(
         self.secret = ["up", "down", "left", "right"]
-        self.pause_code = ["s", "t", "o", "p"]
+        self.pause_code = ["space"]
         self.pause_index = 0
         self.current_sequence_index = 0
         root.bind('<Key>', self.discover_secret)
@@ -59,7 +59,7 @@ class SecretTickerApp:
                 self.btc_ticker.is_paused = new_state
                 self.eth_ticker.is_paused = new_state
                 self.sol_ticker.is_paused = new_state
-                print(f'Game is {'paused' if new_state else 'resumed'}')
+                print(f'Price is {'paused' if new_state else 'resumed'}')
         else:
             self.pause_index = 0
 
@@ -87,10 +87,10 @@ class SecretTickerApp:
 
     def change_hint(self):
         if self.hidden_visible == True:
-            return "HOW DID YOU DISCOVERED MY SECRET ?"
+            return "Congratulations, you discovered the hidden secret, press SPACE to pause and play the price" 
         else:
             return """\n
-            (Konami code answer at the top of my README.MD)\n
+            (Konami code answer in the README.MD file)\n
             To start, look towards the sky, where birds fly and clouds pass.\n
             Next, set your eyes on the ground, where roots grow and buried treasures hide\n
             Turn your head towards the place where the sun sets in the evening, where your less used hand is often found.\n
