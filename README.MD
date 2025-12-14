@@ -4,7 +4,7 @@ A discrete crypto dashboard built with **Python** and **Tkinter**. the interface
 
 ## ✨ Key Features
 
-* **🔐 Secret Access:** The main dashboard is hidden by default. You must enter the **Konami Code** on your keyboard to reveal the app ("UP","DOWN","LEFT","RIGHT").
+* **🔐 Secret Access:** The main dashboard is hidden by default. You must enter the **Konami Code** on your keyboard to reveal the app.
 * **₿ Multi-Asset Tracking:** Displays live prices for **Bitcoin (BTC)**,  **Solarium (SOL)** and **Ethereum (ETC)**.
 * **📈 Dynamic Graphing:**
     * The graph turns **Green** 🟢 when the price increases.
