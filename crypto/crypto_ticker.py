@@ -16,9 +16,10 @@ class CryptoTicker:
         self.symbol = symbol.lower()
         self.display_name = display_name
         self.is_active = False
+        self.is_paused = False
+
         self.ws = None
         self.image_path = image_path
-
         # Create UI
         self.frame = tk.Frame(parent, relief="solid",
                                borderwidth=1, padx=20, pady=20,bg="black")
@@ -59,7 +60,6 @@ class CryptoTicker:
         """Start WebSocket connection."""
         if self.is_active:
             return
-
         self.is_active = True
         ws_url = f"wss://stream.binance.com:9443/ws/{self.symbol}@ticker"
 
@@ -84,6 +84,9 @@ class CryptoTicker:
         """Handle price updates."""
         if not self.is_active:
             return
+        if self.is_paused:
+            return
+        
 
         data = json.loads(message)
         price = float(data['c'])

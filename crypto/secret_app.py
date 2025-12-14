@@ -10,10 +10,12 @@ class SecretTickerApp:
         self.root.title("Secret Crypto Dashboard")
         self.root.geometry("1500x800")
         root.configure(bg="black")
-        control_frame = tk.Frame(root, bg='black',padx=10, pady=10)
+        control_frame = tk.Frame(root, bg='black', padx=10, pady=10)
         control_frame.pack(fill=tk.X)
         # Can't tell you ;(
         self.secret = ["up", "down", "left", "right"]
+        self.pause_code = ["space"]
+        self.pause_index = 0
         self.current_sequence_index = 0
         root.bind('<Key>', self.discover_secret)
         self.hidden_visible = False
@@ -22,7 +24,7 @@ class SecretTickerApp:
             text=self.change_hint(),
             fg="white",
             bg="black",
-            font=("Calibri",14,'bold'),
+            font=("Calibri", 14, 'bold'),
             wraplength=1000,
             justify="left",
         )
@@ -46,8 +48,24 @@ class SecretTickerApp:
         self.sol_ticker.stop()
         self.root.destroy()
 
+    def on_pause(self, event):
+        key = event.keysym.lower()
+        if key == self.pause_code[self.pause_index]:
+            self.pause_index += 1
+            if self.pause_index == len(self.pause_code):
+                self.pause_index = 0
+                new_state = not self.btc_ticker.is_paused
+
+                self.btc_ticker.is_paused = new_state
+                self.eth_ticker.is_paused = new_state
+                self.sol_ticker.is_paused = new_state
+                print(f'Price is {'paused' if new_state else 'resumed'}')
+        else:
+            self.pause_index = 0
+
     def discover_secret(self, event):
         """Show my tickers with Konami Code."""
+        self.on_pause(event)
         key = event.keysym.lower()
         if key == self.secret[self.current_sequence_index]:
             self.current_sequence_index += 1
@@ -69,9 +87,10 @@ class SecretTickerApp:
 
     def change_hint(self):
         if self.hidden_visible == True:
-            return "HOW DID YOU DISCOVERED MY SECRET ?"
+            return "Congratulations, you discovered the hidden secret, press SPACE to pause and play the price" 
         else:
             return """\n
+            (Konami code answer in the README.MD file)\n
             To start, look towards the sky, where birds fly and clouds pass.\n
             Next, set your eyes on the ground, where roots grow and buried treasures hide\n
             Turn your head towards the place where the sun sets in the evening, where your less used hand is often found.\n
